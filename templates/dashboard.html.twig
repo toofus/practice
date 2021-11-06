@@ -8,6 +8,16 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
+        <script type="text/javascript">
+          window.appEnv = {
+            title: '{{ app_name }}',
+            user: '{{ app.user.identifier }}',
+            logo: '{{ asset('build/logo.jpg') }}',
+            basePath: '{{ path('app_dashboard') }}',
+            baseUrl: '{{ app.request.schemeAndHttpHost }}'
+            logoutUrl: '{{ url('app_logout') }}'
+          };
+        </script>
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}

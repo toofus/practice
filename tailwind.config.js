@@ -20,7 +20,7 @@ module.exports = {
       },
       colors: {
         gray: colors.coolGray,
-        blue: colors.lightBlue,
+        blue: colors.sky,
         brand: "#ef7744",
       },
     },

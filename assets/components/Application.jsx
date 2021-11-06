@@ -30,7 +30,7 @@ const Application = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <BrowserRouter basename="/cms/dashboard">
+      <BrowserRouter basename="/dashboard">
       <Disclosure as="nav" className="bg-white shadow-sm">
         {({ open }) => (
           <>

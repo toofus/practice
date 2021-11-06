@@ -14,7 +14,7 @@
             user: '{{ app.user.identifier }}',
             logo: '{{ asset('build/logo.jpg') }}',
             basePath: '{{ path('app_dashboard') }}',
-            baseUrl: '{{ app.request.schemeAndHttpHost }}'
+            baseUrl: '{{ app.request.schemeAndHttpHost }}',
             logoutUrl: '{{ url('app_logout') }}'
           };
         </script>

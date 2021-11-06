@@ -7,7 +7,8 @@ module.exports = {
     enabled: false,
     content: [
       "./templates/**/*.html.twig",
-      "./assets/components/**/*.jsx",
+      "./assets/components/**/*.{js,jsx}",
+      "./assets/pages/**/*.{js,jsx}",
       "./assets/controllers/**/*.js",
     ],
   },

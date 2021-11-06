@@ -1,4 +1,11 @@
-import './styles/app.css';
+import "@/styles/app.css";
+import React from "react";
+import ReactDOM from "react-dom";
+import Application from "@/components/Application";
 
-// start the Stimulus application
-import './bootstrap';
+ReactDOM.render(
+  <React.StrictMode>
+    <Application />
+  </React.StrictMode>,
+  document.getElementById("root")
+);

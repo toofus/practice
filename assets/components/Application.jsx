@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, lazy, Suspense } from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { ApplicationContext } from "@/contexts/ApplicationContext";
 import Dashboard from "@/pages/Dashboard";
-import Profile from "@/pages/Profile";
-import About from "@/pages/About";
+const Profile = lazy(() => import("@/pages/Profile"));
+const About = lazy(() => import("@/pages/About"));
 
 const Application = () => {
   const { appEnv } = useContext(ApplicationContext);
@@ -23,11 +23,13 @@ const Application = () => {
           </li>
         </ul>
         <div className="mt-10">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
+          <Suspense fallback={<p>Loading...</p>}>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </Suspense>
         </div>
       </div>
     </BrowserRouter>

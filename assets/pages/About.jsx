@@ -15,10 +15,42 @@ const About = () => {
   });
 
   const appendItem = () => {
-    append({ name: "", phone: "" });
+    append({ name: "", phone: "", upload: null });
   };
 
-  const onSubmit = async (data) => {};
+  const onSubmit = ({ items }) => {
+    const formData = new FormData();
+    for (let i = items.length - 1; i >= 0; i--) {
+      formData.set(`form[${i}][name]`, items[i].name);
+      formData.set(`form[${i}][phone]`, items[i].phone);
+      formData.set(`form[${i}][upload]`, items[i].upload[0]);
+    }
+    fetch("https://localhost:8000/post-data", {
+      method: "post",
+      cache: "no-cache",
+      credentials: "same-origin",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then(({ success, data }) => {
+        if (success) {
+          console.log("ok", data);
+        } else {
+          data.violations.forEach((violation, index) => {
+            // const name = propertyPath.replace("[", "").replace("]", "");
+            violation.forEach((obj) => {
+              const name = `items[${index}].${obj.propertyPath}`;
+              setError(name, {
+                type: "manual",
+                name: name,
+                message: obj.message,
+              });
+            });
+          });
+        }
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <div className="container mx-auto">
@@ -55,6 +87,17 @@ const About = () => {
                   </p>
                 </div>
                 <div>
+                  <input
+                    type="file"
+                    {...register(`items[${index}].upload`, {
+                      required: "upload is required",
+                    })}
+                  />
+                  <p className="text-sm text-red-600">
+                    {errors.items?.[index]?.upload?.message}
+                  </p>
+                </div>
+                <div>
                   <button type="button" onClick={() => remove(id)}>
                     Remove
                   </button>
@@ -63,7 +106,7 @@ const About = () => {
             );
           }
         })}
-        <button type="button" onClick={() => append({})}>
+        <button type="button" onClick={() => appendItem()}>
           Append
         </button>
         <button type="submit">Submit</button>

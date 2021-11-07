@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Demo;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -36,6 +37,9 @@ class InitDefaultCommand extends Command {
 			)
 			->setRoles(['ROLE_ADMIN']);
 		$this->entityManager->persist($admin);
+
+		$demo = new Demo();
+		$this->entityManager->persist($demo);
 
 		$this->entityManager->flush();
 

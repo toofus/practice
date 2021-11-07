@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DataTransferObject\DemoDTO;
+use App\Repository\DemoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,9 +38,9 @@ class DashboardController extends AbstractController
     /**
      * @Route("/post-data", methods={"POST"})
      */
-    public function postData(Request $request, ValidatorInterface $validator): Response
+    public function postData(Request $request, ValidatorInterface $validator, DemoRepository $repo): Response
     {
-        $inputs = [];
+        $data = [];
         $errors = [];
         foreach($request->get('form') as $index => $form) {
             $obj = new DemoDTO(
@@ -53,11 +54,17 @@ class DashboardController extends AbstractController
                 foreach($violations as $violation) {
                     $messages[] = ['propertyPath' => $violation->getPropertyPath(), 'message' => $violation->getMessage()];
                 }
+                $errors[$index] = $messages;
+            } else {
+                $data[] = $obj->jsonSerialize();
             }
-            $errors[$index] = $messages;
         }
         if (count($errors) > 0) {
             return $this->json(['success' => false, 'data' => ['violations' => $errors]]);
         }
+        $demo = $repo->find(1);
+        $demo->setFields($data);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->json(['success' => true]);
     }
 }

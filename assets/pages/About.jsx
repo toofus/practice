@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
   const [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
   const {
     register,
     control,
@@ -37,7 +39,7 @@ const About = () => {
       .then(({ success, data }) => {
         setLoading(false);
         if (success) {
-          console.log("ok", data);
+          navigate("/");
         } else {
           // console.log(data.violations);
           Object.entries(data.violations).forEach((violation, index) => {
@@ -115,7 +117,7 @@ const About = () => {
         <button type="button" onClick={() => appendItem()}>
           Append
         </button>
-        <button type="submit" disabled={!isValid || loading}>
+        <button type="submit" disabled={loading}>
           Submit
         </button>
       </form>

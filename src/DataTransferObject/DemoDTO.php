@@ -5,24 +5,24 @@ namespace App\DataTransferObject;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class DemoDTO
+class DemoDTO implements \JsonSerializable
 {
 	/**
 	 * @Assert\NotBlank
-	 * @Assert\Length(min = 50)
+	 * @Assert\Length(min = 5)
 	 */
 	public $name;
 
 	/**
 	 * @Assert\NotBlank
-	 * @Assert\Length(min = 50)
+	 * @Assert\Length(min = 5)
 	 */
 	public $phone;
 
 	/**
 	 * @Assert\NotBlank
 	 * @Assert\Image(
-	 *  mimeTypes = "image/jpeg",
+	 *  mimeTypes = "image/*",
      *  maxSize = "1M"
 	 * )
 	 */
@@ -33,5 +33,14 @@ class DemoDTO
 		$this->name = $name;
 		$this->phone = $phone;
 		$this->upload = $upload;
+	}
+
+	public function jsonSerialize()
+	{
+		return [
+			'name' => $this->name,
+			'phone' => $this->phone,
+			'media' => $this->upload->getClientOriginalName()
+		];
 	}
 }

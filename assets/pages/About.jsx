@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 
 const About = () => {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     setError,
   } = useForm();
   const { fields, append, remove } = useFieldArray({
@@ -19,6 +20,7 @@ const About = () => {
   };
 
   const onSubmit = ({ items }) => {
+    setLoading(true);
     const formData = new FormData();
     for (let i = items.length - 1; i >= 0; i--) {
       formData.set(`form[${i}][name]`, items[i].name);
@@ -33,6 +35,7 @@ const About = () => {
     })
       .then((response) => response.json())
       .then(({ success, data }) => {
+        setLoading(false);
         if (success) {
           console.log("ok", data);
         } else {
@@ -49,7 +52,10 @@ const About = () => {
           });
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
   };
 
   return (
@@ -109,7 +115,9 @@ const About = () => {
         <button type="button" onClick={() => appendItem()}>
           Append
         </button>
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={!isValid || loading}>
+          Submit
+        </button>
       </form>
     </div>
   );

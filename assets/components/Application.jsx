@@ -1,25 +1,38 @@
 import React, { useContext, lazy, Suspense } from "react";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import { ApplicationContext } from "@/contexts/ApplicationContext";
 import Dashboard from "@/pages/Dashboard";
 const Profile = lazy(() => import("@/pages/Profile"));
 const About = lazy(() => import("@/pages/About"));
 
 const Application = () => {
-  const { appEnv } = useContext(ApplicationContext);
+  const { appEnv, menu } = useContext(ApplicationContext);
+  let navigate = useNavigate();
+
+  const handleClick = (path) => {
+    navigate(path);
+    menu.open = !menu.open;
+  };
 
   return (
-    <BrowserRouter basename={appEnv.basePath}>
+    <>
+      <div className={menu.open ? "block my-5" : "hidden"}>Menu Open</div>
       <div className="min-h-screen bg-gray-100">
         <ul className="flex items-center space-x-2">
           <li>
-            <Link to="/">Dashboard</Link>
+            <button onClick={() => handleClick("/")}>Dashboard</button>
           </li>
           <li>
-            <Link to="/about">About</Link>
+            <button onClick={() => handleClick("/about")}>About</button>
           </li>
           <li>
-            <Link to="/profile">Profile</Link>
+            <button onClick={() => handleClick("/profile")}>Profile</button>
           </li>
         </ul>
         <div className="mt-10">
@@ -32,7 +45,7 @@ const Application = () => {
           </Suspense>
         </div>
       </div>
-    </BrowserRouter>
+    </>
   );
 };
 

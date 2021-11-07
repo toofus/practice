@@ -11,7 +11,13 @@ const Profile = () => {
   });
   const [loading, setLoading] = useState(true);
   const { appEnv } = useContext(ApplicationContext);
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     setLoading(true);
@@ -39,19 +45,43 @@ const Profile = () => {
         >
           <div>
             <label>Identifier</label>
-            <input name="identifier" {...register("identifier")} />
+            <input
+              {...register("identifier", {
+                required: "identifier is required",
+              })}
+            />
+            {errors.identifier && <p>{errors.identifier.message}</p>}
           </div>
           <div>
             <label>current_password</label>
-            <input name="current_password" {...register("current_password")} />
+            <input
+              {...register("current_password", {
+                required: "current_password is required",
+              })}
+            />
+            {errors.current_password && (
+              <p>{errors.current_password.message}</p>
+            )}
           </div>
           <div>
             <label>new_password</label>
-            <input name="new_password" {...register("new_password")} />
+            <input
+              {...register("new_password", {
+                required: "new_password is required",
+              })}
+            />
+            {errors.new_password && <p>{errors.new_password.message}</p>}
           </div>
           <div>
             <label>confirm_password</label>
-            <input name="confirm_password" {...register("confirm_password")} />
+            <input
+              {...register("confirm_password", {
+                required: "confirm_password is required",
+              })}
+            />
+            {errors.confirm_password && (
+              <p>{errors.confirm_password.message}</p>
+            )}
           </div>
           <div className="mt-10">
             <button type="submit" className="btn btn-primary mr-1">

@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, useFieldArray, useWatch } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 
 const About = () => {
   const {
@@ -36,13 +36,13 @@ const About = () => {
         if (success) {
           console.log("ok", data);
         } else {
-          data.violations.forEach((violation, index) => {
-            // const name = propertyPath.replace("[", "").replace("]", "");
-            violation.forEach((obj) => {
-              const name = `items[${index}].${obj.propertyPath}`;
-              setError(name, {
+          // console.log(data.violations);
+          Object.entries(data.violations).forEach((violation, index) => {
+            violation[1].forEach((obj) => {
+              const propertyPath = `items[${index}].${obj.propertyPath}`;
+              setError(propertyPath, {
                 type: "manual",
-                name: name,
+                name: propertyPath,
                 message: obj.message,
               });
             });

@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -56,8 +57,7 @@ class DashboardController extends AbstractController
             $errors[$index] = $messages;
         }
         if (count($errors) > 0) {
-            dd($errors);
-            return $this->json(['success' => false, 'data' => ['violations' => $errors]], 200);
+            return $this->json(['success' => false, 'data' => ['violations' => $errors]]);
         }
     }
 }

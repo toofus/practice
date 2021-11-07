@@ -36,12 +36,22 @@ class DashboardController extends AbstractController
     }
 
     /**
+     * @Route("/get-data", methods={"GET"})
+     */
+    public function getData(DemoRepository $repo): Response
+    {
+        $demo = $repo->find(1);
+        return $this->json(['success' => true, 'data' => $demo->getFields()]);
+    }
+
+    /**
      * @Route("/post-data", methods={"POST"})
      */
     public function postData(Request $request, ValidatorInterface $validator, DemoRepository $repo): Response
     {
         $data = [];
         $errors = [];
+        // dd($request->get('form'));
         foreach($request->get('form') as $index => $form) {
             $obj = new DemoDTO(
                 $form['name'],

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,21 @@ const About = () => {
   const appendItem = () => {
     append({ name: "", phone: "", upload: null });
   };
+
+  useEffect(() => {
+    fetch("https://localhost:8000/get-data")
+      .then((response) => response.json())
+      .then(({ data }) => {
+        data.forEach((item) => {
+          append({
+            name: item.name,
+            phone: item.phone,
+            upload: null,
+          });
+        });
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   const onSubmit = ({ items }) => {
     setLoading(true);

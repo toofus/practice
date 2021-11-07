@@ -12,7 +12,7 @@ const About = () => {
     formState: { errors, isValid },
     setError,
   } = useForm();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, prepend, remove } = useFieldArray({
     control,
     name: "items",
   });
@@ -42,7 +42,11 @@ const About = () => {
     for (let i = items.length - 1; i >= 0; i--) {
       formData.set(`form[${i}][name]`, items[i].name);
       formData.set(`form[${i}][phone]`, items[i].phone);
-      formData.set(`form[${i}][upload]`, items[i].upload[0]);
+      if (items[i].upload && items[i].upload.length) {
+        formData.set(`form[${i}][upload]`, items[i].upload[0]);
+      } else {
+        formData.set(`form[${i}][upload]`, null);
+      }
     }
     fetch("https://localhost:8000/post-data", {
       method: "post",
@@ -57,9 +61,10 @@ const About = () => {
           navigate("/");
         } else {
           // console.log(data.violations);
-          Object.entries(data.violations).forEach((violation, index) => {
+          const violations = Object.entries(data.violations);
+          violations.forEach((violation) => {
             violation[1].forEach((obj) => {
-              const propertyPath = `items[${index}].${obj.propertyPath}`;
+              const propertyPath = `items[${violation[0]}].${obj.propertyPath}`;
               setError(propertyPath, {
                 type: "manual",
                 name: propertyPath,
@@ -88,7 +93,6 @@ const About = () => {
                 className="flex items-center space-x-3 border rounded-lg p-2"
                 key={id}
               >
-                <div>{index + 1}</div>
                 <div>
                   <input
                     {...register(`items[${index}].name`, {
@@ -110,18 +114,13 @@ const About = () => {
                   </p>
                 </div>
                 <div>
-                  <input
-                    type="file"
-                    {...register(`items[${index}].upload`, {
-                      required: "upload is required",
-                    })}
-                  />
+                  <input type="file" {...register(`items[${index}].upload`)} />
                   <p className="text-sm text-red-600">
                     {errors.items?.[index]?.upload?.message}
                   </p>
                 </div>
                 <div>
-                  <button type="button" onClick={() => remove(id)}>
+                  <button type="button" onClick={() => remove(index)}>
                     Remove
                   </button>
                 </div>

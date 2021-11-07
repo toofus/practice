@@ -20,7 +20,6 @@ class DemoDTO implements \JsonSerializable
 	public $phone;
 
 	/**
-	 * @Assert\NotBlank
 	 * @Assert\Image(
 	 *  mimeTypes = "image/*",
      *  maxSize = "1M"
@@ -40,7 +39,7 @@ class DemoDTO implements \JsonSerializable
 		return [
 			'name' => $this->name,
 			'phone' => $this->phone,
-			'media' => $this->upload->getClientOriginalName()
+			'media' => empty($this->upload) ? '' : $this->upload->getClientOriginalName()
 		];
 	}
 }

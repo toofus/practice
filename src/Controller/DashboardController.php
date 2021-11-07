@@ -56,7 +56,7 @@ class DashboardController extends AbstractController
             $obj = new DemoDTO(
                 $form['name'],
                 $form['phone'],
-                $request->files->get('form')[$index]['upload']
+                $request->files->get('form')[$index]['upload'] ?? null
             );
             $violations = $validator->validate($obj);
             if (count($violations) > 0) {

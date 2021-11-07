@@ -22,6 +22,11 @@ class DashboardController extends AbstractController
      */
     public function profile(Request $request): Response
     {
-    	return $this->json(['success' => time()]);
+    	return $this->json([
+            'identifier' => $this->getUser()->getIdentifier(),
+            'current_password' => '',
+            'new_password' => '',
+            'confirm_password' => ''
+        ]);
     }
 }

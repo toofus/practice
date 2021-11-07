@@ -31,9 +31,7 @@ const Profile = () => {
     reset(data);
   }, [data]);
 
-  const onSubmit = (params) => {
-    return false;
-  };
+  const onSubmit = (params) => {};
 
   return (
     <div>

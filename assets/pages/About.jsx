@@ -92,6 +92,7 @@ const About = () => {
 
   return (
     <div className="container mx-auto">
+      <h1 className="font-bold text-indigo-800">HMR Works</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 gap-4"

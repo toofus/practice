@@ -78,8 +78,24 @@ Encore
   // uncomment to get integrity="..." attributes on your script & link tags
   // requires WebpackEncoreBundle 1.4 or higher
   .enableIntegrityHashes(Encore.isProduction());
+// .configureDevServerOptions((options) => {
+//   options.https = {
+//     pfx: path.join(process.env.HOME, ".symfony/certs/default.p12"),
+//   };
+//   options.allowedHosts = "all";
+//   options.liveReload = false;
+//   console.log(options);
+// });
+
+if (Encore.isDevServer()) {
+  const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+  Encore.addPlugin(new ReactRefreshWebpackPlugin());
+
+  Encore.configureBabel((config) => {
+    config.plugins.push(require("react-refresh/babel"));
+  });
+}
 
 // uncomment if you're having problems with a jQuery plugin
 //.autoProvidejQuery()
-
 module.exports = Encore.getWebpackConfig();

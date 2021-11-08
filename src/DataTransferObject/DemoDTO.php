@@ -4,6 +4,7 @@ namespace App\DataTransferObject;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class DemoDTO implements \JsonSerializable
 {
@@ -33,12 +34,28 @@ class DemoDTO implements \JsonSerializable
 	 */
 	public $upload;
 
-	public function __construct($id, $name, $phone, UploadedFile $upload = null)
+	public function __construct($id, $name, $phone, $media, UploadedFile $upload = null)
 	{
 		$this->id = $id;
 		$this->name = $name;
 		$this->phone = $phone;
-		$this->upload = $upload;
+		$this->media = $media;
+		if (!empty($upload)) {
+			$this->upload = $upload;
+			$this->media = $upload->getClientOriginalName();
+		}
+	}
+
+	/**
+	 * @Assert\Callback
+	 */
+	public function validate(ExecutionContextInterface $context, $payload)
+	{
+		if (empty($this->media) && empty($this->upload)) {
+			$context->buildViolation('Please add a photo')
+				->atPath('upload')
+				->addViolation();
+		}
 	}
 
 	public function jsonSerialize()
@@ -47,7 +64,7 @@ class DemoDTO implements \JsonSerializable
 			'id' => $this->id,
 			'name' => $this->name,
 			'phone' => $this->phone,
-			'media' => empty($this->upload) ? '' : $this->upload->getClientOriginalName()
+			'media' => $this->media,
 		];
 	}
 }

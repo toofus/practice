@@ -62,6 +62,7 @@ class DashboardController extends AbstractController
                     $form['id'],
                     $form['name'],
                     $form['phone'],
+                    $form['media'],
                     $request->files->get('form')[$index]['upload'] ?? null
                 );
                 $violations = $validator->validate($obj);

@@ -19,7 +19,7 @@ const About = () => {
   });
 
   const appendItem = () => {
-    append({ id: "", name: "", phone: "", upload: null });
+    append({ id: "", name: "", phone: "", upload: null, media: "" });
   };
 
   useEffect(() => {
@@ -33,6 +33,7 @@ const About = () => {
             name: item[1].name,
             phone: item[1].phone,
             upload: null,
+            media: item[1].media,
           });
         });
       })
@@ -43,9 +44,10 @@ const About = () => {
     setLoading(true);
     const formData = new FormData();
     for (let i = items.length - 1; i >= 0; i--) {
+      formData.set(`form[${i}][id]`, i);
       formData.set(`form[${i}][name]`, items[i].name);
       formData.set(`form[${i}][phone]`, items[i].phone);
-      formData.set(`form[${i}][id]`, i);
+      formData.set(`form[${i}][media]`, items[i].media);
       if (items[i].upload && items[i].upload.length) {
         formData.set(`form[${i}][upload]`, items[i].upload[0]);
       } else {
@@ -98,6 +100,7 @@ const About = () => {
                 key={key}
               >
                 <input type="hidden" {...register(`items[${index}].id`)} />
+                <input type="hidden" {...register(`items[${index}].media`)} />
                 <div>
                   <input
                     {...register(`items[${index}].name`, {

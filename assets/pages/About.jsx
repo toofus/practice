@@ -12,23 +12,26 @@ const About = () => {
     formState: { errors, isValid },
     setError,
   } = useForm();
-  const { fields, append, prepend, remove } = useFieldArray({
+  const { fields, append, insert, remove } = useFieldArray({
+    keyName: "key",
     control,
     name: "items",
   });
 
   const appendItem = () => {
-    append({ name: "", phone: "", upload: null });
+    append({ id: "", name: "", phone: "", upload: null });
   };
 
   useEffect(() => {
     fetch("https://localhost:8000/get-data")
       .then((response) => response.json())
       .then(({ data }) => {
-        data.forEach((item) => {
-          append({
-            name: item.name,
-            phone: item.phone,
+        Object.entries(data).forEach((item) => {
+          console.log(item);
+          insert(item[0], {
+            id: item[1].id,
+            name: item[1].name,
+            phone: item[1].phone,
             upload: null,
           });
         });
@@ -42,6 +45,7 @@ const About = () => {
     for (let i = items.length - 1; i >= 0; i--) {
       formData.set(`form[${i}][name]`, items[i].name);
       formData.set(`form[${i}][phone]`, items[i].phone);
+      formData.set(`form[${i}][id]`, i);
       if (items[i].upload && items[i].upload.length) {
         formData.set(`form[${i}][upload]`, items[i].upload[0]);
       } else {
@@ -86,13 +90,14 @@ const About = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 gap-4"
       >
-        {fields.map(({ id }, index) => {
+        {fields.map(({ key }, index) => {
           {
             return (
               <div
                 className="flex items-center space-x-3 border rounded-lg p-2"
-                key={id}
+                key={key}
               >
+                <input type="hidden" {...register(`items[${index}].id`)} />
                 <div>
                   <input
                     {...register(`items[${index}].name`, {

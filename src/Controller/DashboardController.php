@@ -41,6 +41,7 @@ class DashboardController extends AbstractController
     public function getData(DemoRepository $repo): Response
     {
         $demo = $repo->find(1);
+        $fields = $demo->getFields();
         return $this->json(['success' => true, 'data' => $demo->getFields()]);
     }
 
@@ -52,25 +53,31 @@ class DashboardController extends AbstractController
         $data = [];
         $errors = [];
         // dd($request->get('form'));
-        foreach($request->get('form') as $index => $form) {
-            $obj = new DemoDTO(
-                $form['name'],
-                $form['phone'],
-                $request->files->get('form')[$index]['upload'] ?? null
-            );
-            $violations = $validator->validate($obj);
-            if (count($violations) > 0) {
-                $messages = [];
-                foreach($violations as $violation) {
-                    $messages[] = ['propertyPath' => $violation->getPropertyPath(), 'message' => $violation->getMessage()];
+        $rows = $request->get('form');
+        if (empty($rows)) {
+            $data = [];
+        } else {
+            foreach($rows as $index => $form) {
+                $obj = new DemoDTO(
+                    $form['id'],
+                    $form['name'],
+                    $form['phone'],
+                    $request->files->get('form')[$index]['upload'] ?? null
+                );
+                $violations = $validator->validate($obj);
+                if (count($violations) > 0) {
+                    $messages = [];
+                    foreach($violations as $violation) {
+                        $messages[] = ['propertyPath' => $violation->getPropertyPath(), 'message' => $violation->getMessage()];
+                    }
+                    $errors[$index] = $messages;
+                } else {
+                    $data[$obj->id] = $obj->jsonSerialize();
                 }
-                $errors[$index] = $messages;
-            } else {
-                $data[] = $obj->jsonSerialize();
             }
-        }
-        if (count($errors) > 0) {
-            return $this->json(['success' => false, 'data' => ['violations' => $errors]]);
+            if (count($errors) > 0) {
+                return $this->json(['success' => false, 'data' => ['violations' => $errors]]);
+            }
         }
         $demo = $repo->find(1);
         $demo->setFields($data);

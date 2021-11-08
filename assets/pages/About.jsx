@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import Preview from "@/components/Preview";
 
 const About = () => {
   const [loading, setLoading] = useState(false);
+  const [dataItems, setDataItems] = useState([]);
+
   let navigate = useNavigate();
   const {
     register,
@@ -26,8 +29,9 @@ const About = () => {
     fetch("https://localhost:8000/get-data")
       .then((response) => response.json())
       .then(({ data }) => {
+        setDataItems(data);
         Object.entries(data).forEach((item) => {
-          console.log(item);
+          // console.log(item);
           insert(item[0], {
             id: item[1].id,
             name: item[1].name,
@@ -101,6 +105,7 @@ const About = () => {
               >
                 <input type="hidden" {...register(`items[${index}].id`)} />
                 <input type="hidden" {...register(`items[${index}].media`)} />
+                <Preview props={fields[index]} />
                 <div>
                   <input
                     {...register(`items[${index}].name`, {

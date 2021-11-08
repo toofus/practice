@@ -92,7 +92,7 @@ const About = () => {
 
   return (
     <div className="container mx-auto">
-      <h1 className="font-bold text-indigo-800">HMR Works</h1>
+      <h1 className="font-bold text-indigo-800">HMR Works Let's Roll</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 gap-4"
@@ -120,7 +120,7 @@ const About = () => {
                 <div>
                   <input
                     {...register(`items[${index}].phone`, {
-                      required: "Phone is required",
+                      required: "Phone is required HMR OK",
                     })}
                   />
                   <p className="text-sm text-red-600">
